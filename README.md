@@ -2,6 +2,8 @@
 
 The Payman AI Toolkit provides a set of AI-ready tools for integrating Payman's payment functionality into AI models. It's specifically designed to work with the Vercel AI SDK and other AI frameworks that support function calling.
 
+> 🚀 **Quick Start Template**: For a ready-to-use template with this toolkit integrated, check out our [Payman AI SDK Quickstart](https://github.com/PaymanAI/payman-ai-sdk-qs) repository. It includes a complete Next.js setup with the Vercel AI SDK and Payman toolkit pre-configured.
+
 ## Installation
 
 ```bash
