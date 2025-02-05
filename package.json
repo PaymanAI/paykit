@@ -1,7 +1,7 @@
 {
-  "name": "payman-ai-toolkit",
-  "version": "1.0.1",
-  "description": "AI toolkit for integrating Payman payment functionality into AI models",
+  "name": "payman-paykit",
+  "version": "1.0.2",
+  "description": "AI payment kit for integrating Payman payment functionality into AI models",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -17,10 +17,10 @@
     "ai",
     "payments",
     "payman",
-    "toolkit",
+    "paykit",
     "ai-toolkit"
   ],
-  "author": "Your Name",
+  "author": "Payman AI, Inc.",
   "license": "MIT",
   "dependencies": {
     "@ai-sdk/openai": "^1.1.9",

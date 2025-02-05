@@ -1,1 +1,1 @@
-export { paymanToolkit } from './payman-tools';
+export { paykit } from './payman-tools';

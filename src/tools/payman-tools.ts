@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { tool } from 'ai';
 import Paymanai from 'paymanai';
 
-export function paymanToolkit(config: {
+export function paykit(config: {
   apiSecret: string;
   environment?: 'production' | 'sandbox';
 }) {

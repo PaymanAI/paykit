@@ -1,9 +1,9 @@
 import { generateText } from 'ai';
-import { paymanToolkit } from './src/tools';
+import { paykit } from './src/tools';
 import { openai } from '@ai-sdk/openai';
 
 
-const paymanTools = paymanToolkit({
+const paymanTools = paykit({
   apiSecret: process.env.PAYMAN_API_SECRET!,
   environment: 'sandbox',
 });
