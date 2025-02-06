@@ -45,49 +45,36 @@ export function paykit(config: {
     }),
 
     createPayee: tool({
-      description: 'Create a new payment destination for future USD payments. Use this when you need to save a new US bank account (ACH) or Payman Agent as a payment destination for the first time. The created destination can then be used with sendPayment.',
-      parameters: z.object({
-        type: z.enum(['US_ACH', 'PAYMAN_AGENT']).describe('Type of payment destination - either US ACH bank transfer or Payman Agent'),
-        name: z.string().describe('Name for the payment destination'),
-        customerId: z.string().optional().describe('Customer ID who owns this destination'),
-        accountHolderName: z.string().optional().describe('For ACH: Name of the account holder'),
-        accountHolderType: z.enum(['individual', 'business']).optional().describe('For ACH: Type of account holder'),
-        accountNumber: z.string().optional().describe('For ACH: Bank account number'),
-        routingNumber: z.string().optional().describe('For ACH: Bank routing number'),
-        accountType: z.enum(['checking', 'savings']).optional().describe('For ACH: Type of bank account'),
-        paymanAgentId: z.string().optional().describe('For Payman Agent: The unique ID of the receiving agent'),
-        contactDetails: z.object({
-          address: z.string().optional().describe('The address string of the payment destination contact'),
-          email: z.string().optional().describe('The email address of the payment destination contact'),
-          phoneNumber: z.string().optional().describe('The phone number of the payment destination contact'),
-          taxId: z.string().optional().describe('The tax identification of the payment destination contact'),
-        }).optional().describe('Optional contact details for the payment destination'),
-      }),
+      description: 'Create a new payment destination for future USD payments. Use this when you need to save a new US bank account (ACH) or Payman Agent as a payment destination for the first time.',
+      parameters: z.discriminatedUnion('type', [
+        z.object({
+          type: z.literal('US_ACH').describe('US ACH bank transfer'),
+          name: z.string().describe('Name for the payment destination'),
+          customerId: z.string().describe('Customer ID who owns this destination'),
+          accountHolderName: z.string().describe('Name of the account holder'),
+          accountHolderType: z.enum(['individual', 'business']).describe('Type of account holder'),
+          accountNumber: z.string().describe('Bank account number'),
+          routingNumber: z.string().describe('Bank routing number'),
+          accountType: z.enum(['checking', 'savings']).describe('Type of bank account'),
+          contactDetails: z.object({
+            address: z.string().optional().describe('Address of the account holder'),
+            email: z.string().optional().describe('Email of the account holder'),
+            phoneNumber: z.string().optional().describe('Phone number of the account holder'),
+            taxId: z.string().optional().describe('Tax ID of the account holder'),
+          }).optional().describe('Optional contact details'),
+        }),
+        z.object({
+          type: z.literal('PAYMAN_AGENT').describe('Payman Agent transfer'),
+          name: z.string().describe('Name for the payment destination'),
+          paymanAgentId: z.string().describe('The unique ID of the receiving agent'),
+          contactDetails: z.object({
+            email: z.string().optional().describe('Email of the Payman Agent'),
+            phoneNumber: z.string().optional().describe('Phone number of the Payman Agent'),
+          }).optional().describe('Optional contact details'),
+        }),
+      ]),
       execute: async (params) => {
-        const { type, name, customerId, accountHolderName, accountHolderType, accountNumber, routingNumber, accountType, paymanAgentId, contactDetails } = params;
-        
-        if (type === 'US_ACH') {
-          const payeeParams = {
-            type: 'US_ACH' as const,
-            name,
-            customerId,
-            accountHolderName,
-            accountHolderType,
-            accountNumber,
-            routingNumber,
-            accountType,
-            contactDetails,
-          };
-          return await client.payments.createPayee(payeeParams);
-        } else {
-          const payeeParams = {
-            type: 'PAYMAN_AGENT' as const,
-            name,
-            paymanAgentId,
-            contactDetails,
-          };
-          return await client.payments.createPayee(payeeParams);
-        }
+        return await client.payments.createPayee(params);
       },
     }),
 
