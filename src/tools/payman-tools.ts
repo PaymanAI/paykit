@@ -66,11 +66,9 @@ export function paykit(config: {
       execute: async (params) => {
         const { type, name, customerId, accountHolderName, accountHolderType, accountNumber, routingNumber, accountType, paymanAgentId, contactDetails } = params;
         
-        let payeeParams;
-        
         if (type === 'US_ACH') {
-          payeeParams = {
-            type: 'US_ACH',
+          const payeeParams = {
+            type: 'US_ACH' as const,
             name,
             customerId,
             accountHolderName,
@@ -80,17 +78,16 @@ export function paykit(config: {
             accountType,
             contactDetails,
           };
+          return await client.payments.createPayee(payeeParams);
         } else {
-          payeeParams = {
-            type: 'PAYMAN_AGENT',
+          const payeeParams = {
+            type: 'PAYMAN_AGENT' as const,
             name,
             paymanAgentId,
             contactDetails,
           };
+          return await client.payments.createPayee(payeeParams);
         }
-
-        const response = await client.payments.createPayee(payeeParams);
-        return response;
       },
     }),
 
