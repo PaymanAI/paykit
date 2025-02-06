@@ -51,27 +51,43 @@ export function paykit(config: {
         name: z.string().describe('Name for the payment destination'),
         customerId: z.string().optional().describe('Customer ID who owns this destination'),
         accountHolderName: z.string().optional().describe('For ACH: Name of the account holder'),
+        accountHolderType: z.enum(['individual', 'business']).optional().describe('For ACH: Type of account holder'),
         accountNumber: z.string().optional().describe('For ACH: Bank account number'),
         routingNumber: z.string().optional().describe('For ACH: Bank routing number'),
         accountType: z.enum(['checking', 'savings']).optional().describe('For ACH: Type of bank account'),
         paymanAgentId: z.string().optional().describe('For Payman Agent: The unique ID of the receiving agent'),
+        contactDetails: z.object({
+          address: z.string().optional().describe('The address string of the payment destination contact'),
+          email: z.string().optional().describe('The email address of the payment destination contact'),
+          phoneNumber: z.string().optional().describe('The phone number of the payment destination contact'),
+          taxId: z.string().optional().describe('The tax identification of the payment destination contact'),
+        }).optional().describe('Optional contact details for the payment destination'),
       }),
       execute: async (params) => {
-        const { type, name, customerId, accountHolderName, accountNumber, routingNumber, accountType, paymanAgentId } = params;
+        const { type, name, customerId, accountHolderName, accountHolderType, accountNumber, routingNumber, accountType, paymanAgentId, contactDetails } = params;
         
-        const payeeParams = {
-          type,
-          name,
-          customerId,
-          ...(type === 'US_ACH' ? {
+        let payeeParams;
+        
+        if (type === 'US_ACH') {
+          payeeParams = {
+            type: 'US_ACH',
+            name,
+            customerId,
             accountHolderName,
+            accountHolderType,
             accountNumber,
             routingNumber,
             accountType,
-          } : {
+            contactDetails,
+          };
+        } else {
+          payeeParams = {
+            type: 'PAYMAN_AGENT',
+            name,
             paymanAgentId,
-          }),
-        };
+            contactDetails,
+          };
+        }
 
         const response = await client.payments.createPayee(payeeParams);
         return response;

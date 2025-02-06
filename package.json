@@ -1,6 +1,6 @@
 {
   "name": "payman-paykit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "AI payment kit for integrating Payman payment functionality into AI models",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
