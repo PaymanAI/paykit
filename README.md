@@ -1,4 +1,4 @@
-# Payman PayKit
+# PayKit
 
 The Payman PayKit provides a set of AI-ready tools for integrating Payman's payment functionality into AI models. It's specifically designed to work with the Vercel AI SDK and other AI frameworks that support function calling.
 
